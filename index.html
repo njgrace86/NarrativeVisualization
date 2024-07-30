@@ -1,1 +1,31 @@
-<h1>Hello</h1>h1
+<!DOCTYPE html>
+<meta charset="utf-8">
+
+<!--import d3 -->
+<script src="https://d3js.org/d3.v5.js"></script>
+
+<!--div for visualization-->
+<div id="narrative_viz"></div>
+
+<script>
+
+ // Set canvas dimensions
+var width = 460 - margin.left - margin.right;
+var height = 400 - margin.top - margin.bottom;   
+
+
+// Set margins
+var margin = {top: 50, bottom: 50, left: 50, right: 50};
+
+
+// Import data
+
+data = await d3.csv("");
+
+d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_stacked.csv", function(data) {
+
+// List of subgroups = header of the csv files = soil condition here
+var subgroups = data.columns.slice(1)
+
+// List of groups = species here = value of the first column called group -> I show them on the X axis
+var groups = d3.map(data, function(d){return(d.group)}).keys()
