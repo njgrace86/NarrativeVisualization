@@ -1,31 +1,75 @@
-<!DOCTYPE html>
-<meta charset="utf-8">
+<!Doctype html>
 
-<!--import d3 -->
-<script src="https://d3js.org/d3.v5.js"></script>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>HTML 5 Boilerplate</title>
+        <style>
+            .bar{
+                fill: steelblue;
+            }
+        </style>
 
-<!--div for visualization-->
-<div id="narrative_viz"></div>
+    </head>
+    <body onload='init()'>
+    <h1>Chart</h1>
+        <!--import d3 -->
+        <script src="//d3js.org/d3.v7.min.js"></script>
 
-<script>
+        <!--div for visualization-->
+        <div id="narrative_viz"></div>
 
- // Set canvas dimensions
-var width = 460 - margin.left - margin.right;
-var height = 400 - margin.top - margin.bottom;   
+        <!--specify visualization-->
+        <script>
 
+            // Set margins
+            var margin = {top: 50, bottom: 50, left: 50, right: 50};
 
-// Set margins
-var margin = {top: 50, bottom: 50, left: 50, right: 50};
+            // Set canvas dimensions
+            var width = 1000 - margin.left - margin.right;
+            var height = 1000 - margin.top - margin.bottom; 
 
+            // Import data
+            async function init(){
+                const data = await d3.csv("/CrochetData.csv");
 
-// Import data
+                // Format data grouping by age, age/experience, age/session
+                const age_label = (d3.permute(Array.from(d3.group(data, (d) => d.Age).keys()), [1,3,2,4,5,0,6]));
+                const exp_label = (d3.permute(Array.from(d3.group(data, (d) => d.YearExperience).keys()), [2,1,5,4,0,3]));
+                const time_lable = (d3.permute(Array.from(d3.group(data, (d) => d.SessionTime).keys()), [3,0,2,1]));
 
-data = await d3.csv("");
+                const age_range = d3.rollup(data, (D) => D.length, (d) => d.Age);
+                const age_exp = d3.rollup(data, (D) => D.length, (d) => d.Age, (d) => d.YearExperience);
+                const age_time = d3.rollup(data, (D) => D.length, (d) => d.Age, (d) => d.SessionTime);
 
-d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_stacked.csv", function(data) {
+                var max_age_count = Math.max(...Array.from(age_range.values()))
+        
+                // Define svg
+                var svg = d3.select("#narrative_viz")
+                    .append("svg")
+                        .attr("width", width + margin.left + margin.right)
+                        .attr("height", height + margin.top + margin.bottom)
+                    .append("g")
+                        .attr("transform", "translate(" + margin.left + "," + margin.top + ")");            
 
-// List of subgroups = header of the csv files = soil condition here
-var subgroups = data.columns.slice(1)
+                // Define X axis
+                var x = d3.scaleBand()
+                    .domain([0,1,2,3,4,5,6])
+                    .range([0, width])
 
-// List of groups = species here = value of the first column called group -> I show them on the X axis
-var groups = d3.map(data, function(d){return(d.group)}).keys()
+                svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+
+                var y = d3.scaleLinear()
+                    .domain([max_age_count + 10])
+                    .range([height, 0]);
+                svg.append("g")
+                    .call(d3.axisLeft(y));           
+                    
+                }
+        </script>
+    </body>
+</html>
