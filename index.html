@@ -44,9 +44,7 @@
             // Import data
             async function init(){
                 //d3.csv("datasets/main-chart.csv", function (error, data
-                var data = await d3.csv("datasets/CrochetAge.csv");
-                // var data2 = await d3.csv("/CrochetAgebyExp.csv", d3.autoType);
-                // var data3 = await d3.csv("/CrochetAgebySession.csv", d3.autoType);
+                var data = await d3.csv("./csv_data/CrochetAge.csv");
 
                 // Get levels
                 var levels = data.columns.slice(1)
