@@ -26,17 +26,6 @@
             <button style="background-color: #a5ebc3; color: black;">Next</button>
         </a>
 
-        
-        <!-- <a href="">
-            <button style="background-color: #a5ebc3; color: black;">Age Only</button>
-        </a>
-        <a href="exp.html">
-            <button style="background-color: #a5ebc3; color: black;;">Age / Experience</button>
-        </a>
-        <a href="session.html">
-            <button style="background-color: #a5ebc3; color: black;;">Age / Session Length</button>
-        </a> -->
-
         <!--div for visualization-->
         <div id="narrative_viz"></div>
 
@@ -54,7 +43,8 @@
 
             // Import data
             async function init(){
-                var data = await d3.csv("/CrochetAge.csv");
+                //d3.csv("datasets/main-chart.csv", function (error, data
+                var data = await d3.csv("datasets/CrochetAge.csv");
                 // var data2 = await d3.csv("/CrochetAgebyExp.csv", d3.autoType);
                 // var data3 = await d3.csv("/CrochetAgebySession.csv", d3.autoType);
 
