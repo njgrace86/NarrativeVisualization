@@ -13,16 +13,18 @@
         <!--import d3 -->
         <script src="//d3js.org/d3.v5.min.js"></script>
 
+
+        <!-- Load d3-annotation -->
+        <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>        
+
         
-        <!-- Add buttons -->
+        <!-- Add Next/Back buttons -->
         <a href="index.html">
-            <button style="background-color: #a5ebc3; color: black;">Age Only</button>
+            <button style="background-color: #a5ebc3; color: black;" >Back</button>
         </a>
-        <a href="">
-            <button style="background-color: #a5ebc3; color: black;">Age / Experience</button>
-        </a>
+
         <a href="session.html">
-            <button style="background-color: #a5ebc3; color: black;">Age / Session Length</button>
+            <button style="background-color: #a5ebc3; color: black;">Next</button>
         </a>
 
         <!--div for visualization-->
@@ -78,7 +80,8 @@
 
                 svg.append("g")
                     .attr("transform", "translate(0," + height + ")")
-                    .call(d3.axisBottom(x));
+                    .call(d3.axisBottom(x))
+                        .attr('stroke-width', 2); 
 
                 //http://www.d3noob.org/2012/12/adding-axis-labels-to-d3js-graph.html       
                 svg.append("text")
@@ -88,11 +91,12 @@
 
                 // Define Y axis
                 var y = d3.scaleLinear()
-                    .domain([0, 600])
+                    .domain([-1, 600])
                     .range([height, 0]);
 
                 svg.append("g")
-                    .call(d3.axisLeft(y)); 
+                    .call(d3.axisLeft(y))
+                        .attr('stroke-width', 2);  
 
                 //http://www.d3noob.org/2012/12/adding-axis-labels-to-d3js-graph.html    
                 svg.append("text")
@@ -191,6 +195,34 @@
                     .text(function (d) {return d.key})
                     .attr("text-anchor", "left")
                     .style("alignment-baseline", "middle")
+
+                // Define Annotations
+                const annotations = [
+                {
+                    note: {
+                    label: "It is little surprise that older crocheters tend to be more experienced. It will be interesting to see how many younger crocheters maintain the hobby throughout life",
+                    title: "Experience Correlates with Age.",
+                    align: "left",
+                    wrap: 250,
+                    padding: 10
+                    },
+                    color: ["#01014f"],
+                    x: 725,
+                    y: 775,
+                    dy: -50,
+                    dx: 0
+                }
+                ]
+
+                // Add annotation to the chart
+                const makeAnnotations = d3.annotation()
+                    .type(d3.annotationLabel)
+                    .annotations(annotations)
+
+                d3.select("svg")
+                    .append("g")
+                    .attr("class", "annotation-group")
+                    .call(makeAnnotations)
             }  
             
         </script>

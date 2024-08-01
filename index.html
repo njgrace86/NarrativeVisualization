@@ -17,8 +17,17 @@
         <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
 
         
-        <!-- Control Buttons -->
-        <a href="">
+        <!-- Add Next/Back buttons -->
+        <a href="exp.html">
+            <button style="background-color: #a5ebc3; color: slategray;" disabled>Back</button>
+        </a>
+
+        <a href="exp.html">
+            <button style="background-color: #a5ebc3; color: black;">Next</button>
+        </a>
+
+        
+        <!-- <a href="">
             <button style="background-color: #a5ebc3; color: black;">Age Only</button>
         </a>
         <a href="exp.html">
@@ -26,7 +35,7 @@
         </a>
         <a href="session.html">
             <button style="background-color: #a5ebc3; color: black;;">Age / Session Length</button>
-        </a>
+        </a> -->
 
         <!--div for visualization-->
         <div id="narrative_viz"></div>
@@ -81,7 +90,8 @@
 
                 svg.append("g")
                     .attr("transform", "translate(0," + height + ")")
-                    .call(d3.axisBottom(x));
+                    .call(d3.axisBottom(x))
+                        .attr('stroke-width', 2);
 
                 //http://www.d3noob.org/2012/12/adding-axis-labels-to-d3js-graph.html       
                 svg.append("text")
@@ -91,11 +101,12 @@
 
                 // Define Y axis
                 var y = d3.scaleLinear()
-                    .domain([0, 600])
+                    .domain([-1, 600])
                     .range([height, 0]);
 
                 svg.append("g")
-                    .call(d3.axisLeft(y)); 
+                    .call(d3.axisLeft(y))
+                        .attr('stroke-width', 2); 
 
                 //http://www.d3noob.org/2012/12/adding-axis-labels-to-d3js-graph.html    
                 svg.append("text")
@@ -103,7 +114,7 @@
                     .attr("y", 0 - margin.left)
                     .attr("x", 0 - (height / 2))
                     .attr("dy", "1em")
-                    .style("text-anchor", "middle")
+                    .style("text-anchor", "middle" )
                     .text("Count");           
                     
                 // Define fill colors
@@ -170,7 +181,35 @@
                     .duration(1000)
                     .attr("y", function (d) {return y(d[1])})
                     .attr("height", function (d) {return y(d[0]) - y(d[1])})
-                    .delay(function (d,i) {console.log(i); return(i * 100)})                
+                    .delay(function (d,i) {console.log(i); return(i * 100)})        
+                    
+                // Define Annotations
+                const annotations = [
+                {
+                    note: {
+                    label: "This may be related to renewed interest in the hobby that began during COVID 19. (Hover for more detail!)",
+                    title: "The largest age cohort is 25-34",
+                    align: "left",  // try right or left
+                    wrap: 200,  // try something smaller to see text split in several lines
+                    padding: 10   // More = text lower
+                    },
+                    color: ["#01014f"],
+                    x: 450,
+                    y: 100,
+                    dy: 100,
+                    dx: 100
+                }
+                ]
+
+                // Add annotation to the chart
+                const makeAnnotations = d3.annotation()
+                    .type(d3.annotationLabel)
+                    .annotations(annotations)
+
+                d3.select("svg")
+                    .append("g")
+                    .attr("class", "annotation-group")
+                    .call(makeAnnotations)
             }  
             
         </script>
