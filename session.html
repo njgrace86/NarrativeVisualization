@@ -170,8 +170,8 @@
                     .attr("y", function (d) {return y(d[1])})
                     .attr("height", function (d) {return y(d[0]) - y(d[1])})     
                                     
-                            // Add one colored mark in the legend for each name.
-                            var size = 20
+                // Add one colored mark in the legend for each name.
+                var size = 20
                 svg.selectAll("marks")
                 .data(stacked)
                 .enter()
