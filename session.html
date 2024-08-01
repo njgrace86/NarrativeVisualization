@@ -9,22 +9,19 @@
 
     </head>
     <body style="background-color:lightslategray;" onload='init()'>
-    <h1>Crocheters by Age (of 1505 Respondents)</h1>
-        <!--Load d3 -->
+    <h1>Crocheters by Age and Average Hours per Session (of 1505 Respondents)</h1>
+        <!--import d3 -->
         <script src="//d3js.org/d3.v5.min.js"></script>
 
-        <!-- Load d3-annotation -->
-        <script src="https://rawgit.com/susielu/d3-annotation/master/d3-annotation.min.js"></script>
-
         
-        <!-- Control Buttons -->
-        <a href="">
-            <button style="background-color: #a5ebc3; color: black;">Age Only</button>
+        <!-- Add buttons -->
+        <a href="index.html">
+            <button style="background-color: #a5ebc3; color: black;;">Age Only</button>
         </a>
         <a href="exp.html">
             <button style="background-color: #a5ebc3; color: black;;">Age / Experience</button>
         </a>
-        <a href="session.html">
+        <a href="">
             <button style="background-color: #a5ebc3; color: black;;">Age / Session Length</button>
         </a>
 
@@ -45,9 +42,9 @@
 
             // Import data
             async function init(){
-                var data = await d3.csv("/CrochetAge.csv");
+                // var data = await d3.csv("/CrochetAge.csv");
                 // var data2 = await d3.csv("/CrochetAgebyExp.csv", d3.autoType);
-                // var data3 = await d3.csv("/CrochetAgebySession.csv", d3.autoType);
+                var data = await d3.csv("/CrochetAgebySession.csv", d3.autoType);
 
                 // Get levels
                 var levels = data.columns.slice(1)
@@ -109,26 +106,26 @@
                 // Define fill colors
                 var fill_color = d3.scaleOrdinal()
                     .domain(levels)
-                    .range(["#a5ebc3","#fefcbf","#d3bdfb","#01014f","#f5487f","#f5c0aa"])         
-                    
-                // Define tooltips for hover by level    
+                    .range(["#a5ebc3","#fefcbf","#d3bdfb","#01014f","#f5487f","#f5c0aa"])                
+
+                // Define tooltips for hover by level  
                 var tooltip = d3.select("#narrative_viz")
-                    .append("div")
-                    .style("position", "absolute")
-                    .style("opacity", 0)
-                    .attr("class", "tooltip")
-                    .style("background-color", "lightgrey")
-                    .style("border", "solid")
-                    .style("border-width", "1px")
-                    .style("border-radius", "5px")
-                    .style("padding", "3px")
+                .append("div")
+                .style("position", "absolute")
+                .style("opacity", 0)
+                .attr("class", "tooltip")
+                .style("background-color", "lightgrey")
+                .style("border", "solid")
+                .style("border-width", "1px")
+                .style("border-radius", "5px")
+                .style("padding", "3px")
 
                 // Define tooltip mouseover behavior    
                 var mouseover = function (d) {
                     var level = d3.select(this.parentNode).datum().key;
                     var levelData = d.data[level];
                     tooltip
-                        .html("Data: " + level + "<br>" + "Value: " + levelData)
+                        .html("Average Session: " + level + "<br>" + "Value: " + levelData)
                         .style("opacity", 1)
                 }
 
@@ -141,7 +138,7 @@
                 var mouseleave = function (d) {
                     tooltip
                     .style("opacity", 0)
-                }
+                }                                        
 
                 // Add bars/stacks
                 svg.append("g")
@@ -169,8 +166,32 @@
                     .delay(300)
                     .duration(1000)
                     .attr("y", function (d) {return y(d[1])})
-                    .attr("height", function (d) {return y(d[0]) - y(d[1])})
-                    .delay(function (d,i) {console.log(i); return(i * 100)})                
+                    .attr("height", function (d) {return y(d[0]) - y(d[1])})     
+                                    
+                            // Add one colored mark in the legend for each name.
+                            var size = 20
+                svg.selectAll("marks")
+                .data(stacked)
+                .enter()
+                .append("rect")
+                    .attr("x", 750)
+                    .attr("y", function (d, i) {return  i * (size + 5)})
+                    .attr("width", size)
+                    .attr("height", size)
+                    .style("fill", function (d, i) {return fill_color(d.key)}) 
+
+                // Add one dot in the legend for each name.
+                svg.selectAll("labels")
+                .data(stacked)
+                .enter()
+                .append("text")
+                    .attr("x", 750 + size * 1.2)
+                    .attr("y", function (d, i) {return i * (size + 5) + ((size + 5) / 2)}) 
+                    .style("fill", "black")
+                    .text(function (d) {return d.key})
+                    .attr("text-anchor", "left")
+                    .style("alignment-baseline", "middle")
+
             }  
             
         </script>
